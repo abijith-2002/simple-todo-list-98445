@@ -1,0 +1,98 @@
+:root {
+  /* Colors */
+  --color-210d4e: #210d4e;
+  --color-f5f5f5: #f5f5f5;
+  --color-2fcbfc: #2fcbfc;
+  --color-333333: #333333;
+  --color-fccf2f: #fccf2f;
+  --color-ffffff: #ffffff;
+  --color-818181: #818181;
+  --color-858585: #858585;
+  --color-c4c4c4: #c4c4c4;
+  --color-db1337: #db1337;
+  --color-f8e192: #f8e192;
+  --color-000000: #000000;
+  --color-7b61ff: #7b61ff;
+
+  /* Shadows from DS */
+  --shadow-0: 0px 0px 80px 30px #0d0043;
+  --shadow-1: 0px -3px 8px 0px #000000;
+  --shadow-2: 0px 4px 10px 0px #000000;
+  --shadow-3: 0px 3px 30px 5px #7a5dba;
+
+  /* Typography - families and weights used */
+  --rubik: "Rubik", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --ibm-plex-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Utility classes mapping Figma text styles (exact sizes, line-heights, spacing, colors) */
+.typo-12 { font-family: var(--rubik); font-size: 18px; font-weight: 500; line-height: 21.329998px; letter-spacing: 0.36px; color: var(--color-333333); text-align: left; }
+.typo-13 { font-family: var(--rubik); font-size: 18px; font-weight: 500; line-height: 21.329998px; letter-spacing: 0px; color: var(--color-ffffff); text-align: left; }
+.typo-14 { font-family: var(--rubik); font-size: 16px; font-weight: 500; line-height: 18.959999px; letter-spacing: 0px; color: var(--color-333333); text-align: left; }
+.typo-15 { font-family: var(--rubik); font-size: 14px; font-weight: 300; line-height: 16.590000px; letter-spacing: 0.28px; color: var(--color-858585); text-align: left; }
+.typo-16 { font-family: var(--rubik); font-size: 14px; font-weight: 400; line-height: 16.590000px; letter-spacing: 0.7px; color: var(--color-333333); text-align: left; }
+.typo-17 { font-family: var(--rubik); font-size: 28px; font-weight: 500; line-height: 33.180000px; letter-spacing: 0.56px; color: var(--color-333333); text-align: left; }
+.typo-18 { font-family: var(--ibm-plex-mono); font-size: 18px; font-weight: 600; line-height: 23.399999px; letter-spacing: 0.9px; color: var(--color-ffffff); text-align: left; }
+.typo-19 { font-family: var(--ibm-plex-mono); font-size: 14px; font-weight: 400; line-height: 18.199999px; letter-spacing: 0.7px; color: var(--color-ffffff); text-align: left; }
+.typo-20 { font-family: var(--rubik); font-size: 14px; font-weight: 500; line-height: 16.590000px; letter-spacing: 0.28px; color: var(--color-858585); text-align: left; }
+.typo-21 { font-family: var(--rubik); font-size: 16px; font-weight: 300; line-height: 18.959999px; letter-spacing: 0.32px; color: var(--color-000000); text-align: left; }
+.typo-22 { font-family: var(--rubik); font-size: 24px; font-weight: 500; line-height: 28.439999px; letter-spacing: 0.48px; color: var(--color-000000); text-align: left; }
+
+/* Style tokens from DS styles block */
+.style-0-bg { background: var(--color-210d4e); }
+.style-1 { background: var(--color-f5f5f5); border-radius: 32px; }
+.style-2-bg { background: var(--color-2fcbfc); }
+.style-3-bg { background: var(--color-333333); }
+.style-4-bg { background: var(--color-fccf2f); }
+.style-5-bg { background: var(--color-ffffff); }
+.style-6-bg { background: var(--color-818181); }
+.style-7 { background: var(--color-ffffff); border-radius: 16px; }
+.style-8-bg { background: var(--color-858585); }
+.style-9-bg { background: var(--color-c4c4c4); }
+.style-10 { background: var(--color-db1337); border: 1px solid var(--color-ffffff); }
+.style-11 { border-radius: 16px; }
+.style-12-bg { background: var(--color-f8e192); }
+.style-13 { background: var(--color-ffffff); border: 1px solid var(--color-ffffff); border-radius: 16px; }
+.style-14 { background: var(--color-db1337); border: 2px solid var(--color-ffffff); }
+.style-16 { border: 1px solid var(--color-7b61ff); border-radius: 5px; }
+.style-17 { background: var(--color-f5f5f5); border-radius: 32px; box-shadow: var(--shadow-0); }
+.style-18 { background: var(--color-ffffff); box-shadow: var(--shadow-1); }
+.style-19 { background: var(--color-ffffff); border-radius: 16px; box-shadow: var(--shadow-2); }
+.style-20 { background: var(--color-ffffff); border-radius: 16px; box-shadow: var(--shadow-3); }
+
+/* Canvas base */
+.figma-canvas {
+  position: relative;
+  width: 1920px;
+  height: 960px;
+  background: var(--color-210d4e);
+  overflow: hidden;
+}
+
+/* Absolute element base */
+.abs {
+  position: absolute;
+}
+
+.frame {
+  position: absolute;
+  background: var(--color-f5f5f5);
+  border-radius: 32px;
+  box-shadow: var(--shadow-0);
+  overflow: hidden;
+}
+
+.round-16 { border-radius: 16px; }
+.round-full { border-radius: 9999px; }
+
+/* Ellipse generic via border-radius:50% */
+.ellipse { border-radius: 50%; }
+
+/* Bottom nav background rectangle style */
+.bottom-nav-bg { background: var(--color-ffffff); box-shadow: var(--shadow-1); }
+
+/* Card block shadows */
+.card-outer { background: var(--color-ffffff); border-radius: 16px; box-shadow: var(--shadow-3); overflow: hidden; }
+
+/* Minor resets so absolute text matches spacing */
+.abs-text { white-space: pre; }

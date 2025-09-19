@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import FileCover from './components/FileCover/FileCover';
 
 /**
  * PUBLIC_INTERFACE
@@ -40,6 +41,10 @@ function App() {
   const [text, setText] = useState('');
   const [editId, setEditId] = useState(null);
   const [filter, setFilter] = useState('all'); // all | active | completed
+
+  // PUBLIC_INTERFACE
+  // Simple screen toggle to demo the integrated File Cover screen
+  const [showFileCover, setShowFileCover] = useState(false);
 
   // Persist todos
   useEffect(() => {
@@ -225,106 +230,120 @@ function App() {
           >
             {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
           </button>
+          <button
+            className="theme-toggle"
+            onClick={() => setShowFileCover(v => !v)}
+            aria-label={showFileCover ? 'Show Todo app' : 'Show File Cover screen'}
+            title={showFileCover ? 'Show Todo app' : 'Show File Cover screen'}
+          >
+            {showFileCover ? '↩︎ Back to Todo' : '📄 File Cover'}
+          </button>
         </div>
         <p className="subtitle">Organize tasks with a clean, modern interface.</p>
       </header>
 
       <main className="container">
-        <form className="todo-form" onSubmit={addTodo} aria-label="Add todo form">
-          <input
-            className="input"
-            type="text"
-            value={text}
-            onChange={e => setText(e.target.value)}
-            placeholder={editId ? 'Update your task...' : 'Add a new task...'}
-            aria-label={editId ? 'Edit task text' : 'New task text'}
-            autoFocus
-          />
-          <div className="actions">
-            {editId ? (
-              <>
-                <button type="submit" className="btn primary" aria-label="Save changes">
-                  Save
-                </button>
-                <button type="button" className="btn subtle" onClick={cancelEdit} aria-label="Cancel edit">
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <button type="submit" className="btn primary" aria-label="Add task">
-                Add
-              </button>
-            )}
-          </div>
-        </form>
-
-        <div className="toolbar" aria-label="Todo toolbar">
-          <div className="filters" aria-label="Filter todos" aria-controls="todo-list">
-            <button
-              className={`chip ${filter === 'all' ? 'active' : ''}`}
-              onClick={() => setFilter('all')}
-              aria-pressed={filter === 'all'}
-            >
-              All
-            </button>
-            <button
-              className={`chip ${filter === 'active' ? 'active' : ''}`}
-              onClick={() => setFilter('active')}
-              aria-pressed={filter === 'active'}
-            >
-              Active
-            </button>
-            <button
-              className={`chip ${filter === 'completed' ? 'active' : ''}`}
-              onClick={() => setFilter('completed')}
-              aria-pressed={filter === 'completed'}
-            >
-              Completed
-            </button>
-          </div>
-          <div className="toolbar-right">
-            <span className="muted">{leftCount} left</span>
-            <button className="btn subtle" onClick={exportTasksAsPDF} type="button" aria-label="Export tasks as PDF" title="Export tasks as PDF">
-              ⤓ Export as PDF
-            </button>
-            <button className="btn amber" onClick={clearCompleted} type="button">
-              Clear completed
-            </button>
-          </div>
-        </div>
-
-        <ul id="todo-list" className="todo-list" aria-live="polite">
-          {filteredTodos.length === 0 ? (
-            <li className="empty">No tasks yet. Add one to get started.</li>
-          ) : (
-            filteredTodos.map(todo => (
-              <li key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-                <label className="checkbox">
-                  <input
-                    type="checkbox"
-                    checked={!!todo.completed}
-                    onChange={() => toggleComplete(todo.id)}
-                    aria-label={todo.completed ? 'Mark as active' : 'Mark as completed'}
-                  />
-                  <span className="checkmark" />
-                </label>
-
-                <span className="todo-text" onDoubleClick={() => startEdit(todo.id)}>
-                  {todo.text}
-                </span>
-
-                <div className="row-actions">
-                  <button className="icon-btn edit" onClick={() => startEdit(todo.id)} title="Edit">
-                    ✏️
+        {showFileCover ? (
+          <FileCover />
+        ) : (
+          <>
+            <form className="todo-form" onSubmit={addTodo} aria-label="Add todo form">
+              <input
+                className="input"
+                type="text"
+                value={text}
+                onChange={e => setText(e.target.value)}
+                placeholder={editId ? 'Update your task...' : 'Add a new task...'}
+                aria-label={editId ? 'Edit task text' : 'New task text'}
+                autoFocus
+              />
+              <div className="actions">
+                {editId ? (
+                  <>
+                    <button type="submit" className="btn primary" aria-label="Save changes">
+                      Save
+                    </button>
+                    <button type="button" className="btn subtle" onClick={cancelEdit} aria-label="Cancel edit">
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <button type="submit" className="btn primary" aria-label="Add task">
+                    Add
                   </button>
-                  <button className="icon-btn danger" onClick={() => deleteTodo(todo.id)} title="Delete" aria-label="Delete">
-                    🗑️
-                  </button>
-                </div>
-              </li>
-            ))
-          )}
-        </ul>
+                )}
+              </div>
+            </form>
+
+            <div className="toolbar" aria-label="Todo toolbar">
+              <div className="filters" aria-label="Filter todos" aria-controls="todo-list">
+                <button
+                  className={`chip ${filter === 'all' ? 'active' : ''}`}
+                  onClick={() => setFilter('all')}
+                  aria-pressed={filter === 'all'}
+                >
+                  All
+                </button>
+                <button
+                  className={`chip ${filter === 'active' ? 'active' : ''}`}
+                  onClick={() => setFilter('active')}
+                  aria-pressed={filter === 'active'}
+                >
+                  Active
+                </button>
+                <button
+                  className={`chip ${filter === 'completed' ? 'active' : ''}`}
+                  onClick={() => setFilter('completed')}
+                  aria-pressed={filter === 'completed'}
+                >
+                  Completed
+                </button>
+              </div>
+              <div className="toolbar-right">
+                <span className="muted">{leftCount} left</span>
+                <button className="btn subtle" onClick={exportTasksAsPDF} type="button" aria-label="Export tasks as PDF" title="Export tasks as PDF">
+                  ⤓ Export as PDF
+                </button>
+                <button className="btn amber" onClick={clearCompleted} type="button">
+                  Clear completed
+                </button>
+              </div>
+            </div>
+
+            <ul id="todo-list" className="todo-list" aria-live="polite">
+              {filteredTodos.length === 0 ? (
+                <li className="empty">No tasks yet. Add one to get started.</li>
+              ) : (
+                filteredTodos.map(todo => (
+                  <li key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
+                    <label className="checkbox">
+                      <input
+                        type="checkbox"
+                        checked={!!todo.completed}
+                        onChange={() => toggleComplete(todo.id)}
+                        aria-label={todo.completed ? 'Mark as active' : 'Mark as completed'}
+                      />
+                      <span className="checkmark" />
+                    </label>
+
+                    <span className="todo-text" onDoubleClick={() => startEdit(todo.id)}>
+                      {todo.text}
+                    </span>
+
+                    <div className="row-actions">
+                      <button className="icon-btn edit" onClick={() => startEdit(todo.id)} title="Edit">
+                        ✏️
+                      </button>
+                      <button className="icon-btn danger" onClick={() => deleteTodo(todo.id)} title="Delete" aria-label="Delete">
+                        🗑️
+                      </button>
+                    </div>
+                  </li>
+                ))
+              )}
+            </ul>
+          </>
+        )}
       </main>
 
       <footer className="footer">

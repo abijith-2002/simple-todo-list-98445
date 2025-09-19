@@ -1,0 +1,4 @@
+/* Screen: File cover (61:8) specific additions if needed */
+
+/* Ensure high-DPI images render crisply at given sizes */
+img { image-rendering: auto; }

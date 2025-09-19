@@ -1,0 +1,10 @@
+.canvas {
+  /* Keep original 1920x960 artboard inside a responsive scrollable container */
+  width: 100%;
+  min-height: 960px;
+  overflow: auto;
+  /* Center horizontally with some breathing room */
+  display: block;
+  margin: 0 auto;
+  max-width: 1920px;
+}
