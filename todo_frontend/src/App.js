@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 /**
  * PUBLIC_INTERFACE
@@ -127,6 +129,86 @@ function App() {
 
   const leftCount = useMemo(() => todos.filter(t => !t.completed).length, [todos]);
 
+  // PUBLIC_INTERFACE
+  function exportTasksAsPDF() {
+    /**
+     * Generates a PDF with all current tasks and their status and triggers a download.
+     * Uses jsPDF and autoTable to create a clean, readable table consistent with the app theme.
+     */
+    try {
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' }); // points for precise layout
+      const marginX = 40;
+      const marginY = 46;
+
+      // Title and subtitle
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(20);
+      doc.setTextColor(37, 99, 235); // --primary
+      doc.text('Todo List — Export', marginX, marginY);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(11);
+      doc.setTextColor(17, 24, 39); // --text (dark)
+      const date = new Date();
+      const dateLine = `Generated: ${date.toLocaleString()}`;
+      doc.text(dateLine, marginX, marginY + 18);
+
+      // Build rows from all todos (not just filtered)
+      const rows = todos.length
+        ? todos.map((t, idx) => [
+            idx + 1,
+            t.completed ? 'Completed' : 'Pending',
+            t.text || '',
+          ])
+        : [['—', '—', 'No tasks']];
+
+      // Table styling consistent with theme
+      doc.autoTable({
+        startY: marginY + 34,
+        head: [['#', 'Status', 'Task']],
+        body: rows,
+        styles: {
+          font: 'helvetica',
+          fontSize: 11,
+          cellPadding: 8,
+          textColor: [17, 24, 39],
+        },
+        headStyles: {
+          fillColor: [37, 99, 235],
+          textColor: [255, 255, 255],
+          halign: 'left',
+          fontStyle: 'bold',
+        },
+        alternateRowStyles: { fillColor: [243, 244, 246] }, // light gray
+        columnStyles: {
+          0: { cellWidth: 40, halign: 'left' },
+          1: { cellWidth: 100 },
+          2: { cellWidth: 'auto' },
+        },
+        margin: { left: marginX, right: marginX },
+        didParseCell: (data) => {
+          // Color status text: amber for pending, muted gray for completed
+          if (data.section === 'body' && data.column.index === 1) {
+            if (data.cell.raw === 'Completed') {
+              data.cell.styles.textColor = [107, 114, 128]; // --muted
+            } else {
+              data.cell.styles.textColor = [245, 158, 11]; // --amber
+              data.cell.styles.fontStyle = 'bold';
+            }
+          }
+        },
+      });
+
+      const fileName = `todo_export_${date.toISOString().replace(/[:.]/g, '-')}.pdf`;
+      doc.save(fileName);
+    } catch (err) {
+      // Basic error guard (e.g., if jsPDF fails)
+      // eslint-disable-next-line no-console
+      console.error('Failed to export PDF:', err);
+      alert('Sorry, there was a problem exporting your PDF.'); // basic UX feedback
+    }
+  }
+
   return (
     <div className="ocean-app">
       <div className="ocean-gradient" />
@@ -202,6 +284,9 @@ function App() {
           </div>
           <div className="toolbar-right">
             <span className="muted">{leftCount} left</span>
+            <button className="btn subtle" onClick={exportTasksAsPDF} type="button" aria-label="Export tasks as PDF" title="Export tasks as PDF">
+              ⤓ Export as PDF
+            </button>
             <button className="btn amber" onClick={clearCompleted} type="button">
               Clear completed
             </button>
