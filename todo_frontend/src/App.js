@@ -8,8 +8,20 @@ import './App.css';
  * Features: add, edit, delete, toggle complete, and filter (all/active/completed).
  */
 function App() {
-  // Theme handling (light/dark) to leverage subtle gradients and shadows
-  const [theme, setTheme] = useState('light');
+  // Theme handling (light/dark) with persistence and system preference
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+      // Fallback to system preference on first load
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+    } catch {
+      // ignore
+    }
+    return 'light';
+  });
 
   // Todo state
   const [todos, setTodos] = useState(() => {
@@ -36,9 +48,14 @@ function App() {
     }
   }, [todos]);
 
-  // Apply theme to root
+  // Apply theme to root and persist choice
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {
+      // no-op if storage unavailable
+    }
   }, [theme]);
 
   // Derived list based on filter
@@ -159,29 +176,26 @@ function App() {
           </div>
         </form>
 
-        <div className="toolbar">
-          <div className="filters" role="tablist" aria-label="Filter todos">
+        <div className="toolbar" aria-label="Todo toolbar">
+          <div className="filters" aria-label="Filter todos" aria-controls="todo-list">
             <button
               className={`chip ${filter === 'all' ? 'active' : ''}`}
               onClick={() => setFilter('all')}
-              role="tab"
-              aria-selected={filter === 'all'}
+              aria-pressed={filter === 'all'}
             >
               All
             </button>
             <button
               className={`chip ${filter === 'active' ? 'active' : ''}`}
               onClick={() => setFilter('active')}
-              role="tab"
-              aria-selected={filter === 'active'}
+              aria-pressed={filter === 'active'}
             >
               Active
             </button>
             <button
               className={`chip ${filter === 'completed' ? 'active' : ''}`}
               onClick={() => setFilter('completed')}
-              role="tab"
-              aria-selected={filter === 'completed'}
+              aria-pressed={filter === 'completed'}
             >
               Completed
             </button>
@@ -194,7 +208,7 @@ function App() {
           </div>
         </div>
 
-        <ul className="todo-list" aria-live="polite">
+        <ul id="todo-list" className="todo-list" aria-live="polite">
           {filteredTodos.length === 0 ? (
             <li className="empty">No tasks yet. Add one to get started.</li>
           ) : (
